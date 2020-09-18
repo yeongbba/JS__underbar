@@ -138,6 +138,13 @@
      * `each` 함수와 비슷하게 동작하지만, `each` 함수와는 다르게 배열에 iterator를
      * 실행한 결과들을 배열로 만들어 리턴합니다.
      */
+    let newArr = [];
+
+    _.each(collection, function (item) {
+      newArr.push(iterator(item));
+    });
+
+    return newArr;
   };
 
   // 객체의 배열을 가져와서, 그 안에 있는 특정 속성의 값의 배열을 리턴하세요.
@@ -168,7 +175,23 @@
   //   const identity = _.reduce([5], function(total, number){
   //     return total + number * number;
   //   }); // 5가 리턴됩니다, 전달한 iterator와 관계없이, 첫번째 element가 즉시 사용됩니다.
-  _.reduce = function (collection, iterator, accumulator) {};
+  _.reduce = function (collection, iterator, accumulator) {
+    let result;
+    if (accumulator === undefined) {
+      let acc = collection[0];
+      for (let i = 1; i < collection.length; i++) {
+        acc = iterator(acc, collection[i]);
+      }
+      result = acc;
+    } else {
+      let acc = accumulator;
+      for (let i = 0; i < collection.length; i++) {
+        acc = iterator(acc, collection[i]);
+      }
+      result = acc;
+    }
+    return result;
+  };
 
   // 배열 또는 객체가 주어진 값을 포함하는지 체크합니다. (`===` 연산자를 사용해서 판단합니다.)
   _.contains = function (collection, target) {};

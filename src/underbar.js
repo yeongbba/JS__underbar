@@ -6,7 +6,9 @@
   // argument로 무엇이 전달되든간에, 있는 그대로 리턴하세요.
   // 이 함수가 쓸데없어 보일지 모르겠지만, 기억하세요! - 만약 함수에 iterator가 필요하고,
   // 뭐라도 넘겨줘야 하는 상황에는 이 함수가 유용할 것입니다.
-  _.identity = function (val) {};
+  _.identity = function (val) {
+    return val;
+  };
 
   /**
    * COLLECTIONS
@@ -194,14 +196,71 @@
   };
 
   // 배열 또는 객체가 주어진 값을 포함하는지 체크합니다. (`===` 연산자를 사용해서 판단합니다.)
-  _.contains = function (collection, target) {};
+  _.contains = function (collection, target) {
+    let result = false;
+
+    _.each(collection, (item) => {
+      if (item === target) {
+        result = true;
+      }
+    });
+    return result;
+  };
 
   // 모든 element가 iterator에 의해 truthy한지 체크합니다.
-  _.every = function (collection, iterator) {};
+  _.every = function (collection, iterator) {
+    let arr = [];
+
+    _.each(collection, (item) => {
+      if (iterator === undefined) {
+        if (item) {
+          arr.push(true);
+        } else {
+          arr.push(false);
+        }
+      } else {
+        if (iterator(item)) {
+          arr.push(true);
+        } else {
+          arr.push(false);
+        }
+      }
+    });
+
+    if (_.contains(arr, false)) {
+      return false;
+    } else {
+      return true;
+    }
+  };
 
   // element가 하나라도 iterator에 의해 truthy한지 체크합니다.
   // iterator가 없다면, element 그 자체가 truthy한지 체크하세요.
-  _.some = function (collection, iterator) {};
+  _.some = function (collection, iterator) {
+    let arr = [];
+
+    _.each(collection, (item) => {
+      if (iterator === undefined) {
+        if (item) {
+          arr.push(true);
+        } else {
+          arr.push(false);
+        }
+      } else {
+        if (iterator(item)) {
+          arr.push(true);
+        } else {
+          arr.push(false);
+        }
+      }
+    });
+
+    if (_.contains(arr, true)) {
+      return true;
+    } else {
+      return false;
+    }
+  };
 
   /**
    * OBJECTS
@@ -220,10 +279,31 @@
   //   }, {
   //     bla: "even more stuff"
   //   }); // obj1은 이제 다음 키를 포함합니다. key1, key2, key3, bla
-  _.extend = function (obj) {};
+  _.extend = function (obj, ...theArgs) {
+    let result = obj;
+    let objArr = theArgs;
+    for (let i = 0; i < objArr.length; i++) {
+      for (let key in objArr[i]) {
+        result[key] = objArr[i][key];
+      }
+    }
+    return result;
+  };
 
   // extend와 비슷하지만, 이번엔 이미 존재하는 key에 대해 값을 덮어쓰기 하지 않습니다.
-  _.defaults = function (obj) {};
+  _.defaults = function (obj, ...theArgs) {
+    let result = obj;
+    let objArr = theArgs;
+    for (let i = 0; i < objArr.length; i++) {
+      for (let key in objArr[i]) {
+        if (!(key in obj)) {
+          result[key] = objArr[i][key];
+        }
+      }
+    }
+
+    return result;
+  };
 
   /**
    * FUNCTIONS
@@ -237,13 +317,17 @@
   _.once = function (func) {
     // TIP: 아래 변수는 클로저 scope (바깥 함수 범위)에 저장되며, 리턴된 새로운 함수가 호출될 때마다,
     // 여전히 클로저 scope 내에 존재하므로, 리턴된 함수에서 사용할 수 있습니다.
-    let alreadyCalled = false;
-
+    let alreadyCalled = true;
+    let result;
     /**
      * TIP: `once` 함수는 새로운 함수를 리턴합니다. 이 함수는 이전에 한 번도 호출 된적이 없을 때만
      * input으로 받은 함수를 실행합니다.
      */
-    return function () {
+    return function (...theArgs) {
+      if (alreadyCalled) {
+        alreadyCalled = false;
+        result = func(...theArgs);
+      }
       // TIP: arguments 키워드 혹은, spread operator를 사용하세요.
       return result;
     };

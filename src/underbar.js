@@ -339,7 +339,13 @@
   // 예를 들어, 다음을 호출할 경우
   // _.delay(someFunction, 500, 'a', 'b');
   // someFunction('a', 'b') 은 500ms 이후에 호출됩니다.
-  _.delay = function (func, wait) {};
+  _.delay = function (func, wait, ...theArgs) {
+    let args = theArgs;
+
+    let result = setTimeout(func, wait, ...args);
+
+    return result;
+  };
 
   /**
    * ADVANCED COLLECTION OPERATIONS
@@ -350,7 +356,41 @@
   // 새 배열에는 다차원 배열의 모든 요소가 포함되어야 합니다.
   //
   // Hint: Array.isArray 를 사용해 배열인지 아닌지를 체크하세요.
-  _.flatten = function (nestedArray, result) {};
+  _.flatten = function (nestedArray, result) {
+    const stack = [...nestedArray];
+    const res = [];
+    while (stack.length) {
+      // pop value from stack
+      const next = stack.pop();
+      if (Array.isArray(next)) {
+        // push back array items, won't modify the original input
+        stack.push(...next);
+      } else {
+        res.push(next);
+      }
+    }
+    // reverse to restore input order
+    return res.reverse();
+
+    //for array.length 만큼 순회
+    // !isarray면 push
+    // is array 면 길이도 몰라, 깊이도 몰라,
+    // result = [];
+
+    // _.each(nestedArray, (item) => {
+    //   while (!Array.isArray(item)) {
+    //
+    //   }
+    //   result.push(eval(arr));
+    // });
+
+    // console.log(result);
+
+    // return result;
+    //모든 요소가 배여링ㄴ지 확인
+    //false = > result.push(nestedArray[indexof(false)])
+    //
+  };
 
   // 배열 내용의 순서를 랜덤하게 변경합니다.
   //

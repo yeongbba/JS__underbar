@@ -395,7 +395,24 @@
   // 배열 내용의 순서를 랜덤하게 변경합니다.
   //
   // TIP: 이 함수는 immutable해야 합니다.
-  _.shuffle = function (array) {};
+  _.shuffle = function (array) {
+    let result = [];
+
+    while (result.length !== array.length) {
+      let element = array[getRandomInt(0, array.length)];
+      if (_.indexOf(result, element) === -1) {
+        result.push(element);
+      }
+    }
+
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min)) + min; //최댓값은 제외, 최솟값은 포함
+    }
+
+    return result;
+  };
 
   /**
    * ADVANCED
@@ -407,7 +424,22 @@
 
   // Calls the method named by functionOrKey on each value in the list.
   // Note: You will need to learn a bit about .apply to complete this.
-  _.invoke = function (collection, functionOrKey, args) {};
+  _.invoke = function (collection, functionOrKey, args) {
+    let result = [];
+
+    if (typeof functionOrKey === "function") {
+      for (let i = 0; i < collection.length; i++) {
+        let element = functionOrKey.call(collection[i]);
+        result.push(element);
+      }
+    } else {
+      for (let i = 0; i < collection.length; i++) {
+        let element = `collection[i].${functionOrKey}()`;
+        result.push(eval(element));
+      }
+    }
+    return result;
+  };
 
   // Sort the object's values by a criterion produced by an iterator.
   // If iterator is a string, sort objects by that property with the name

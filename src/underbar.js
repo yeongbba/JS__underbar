@@ -357,7 +357,7 @@
   //
   // Hint: Array.isArray 를 사용해 배열인지 아닌지를 체크하세요.
   _.flatten = function (nestedArray, result) {
-    const stack = [...nestedArray];
+    const stack = nestedArray;
     const res = [];
     while (stack.length) {
       // pop value from stack
@@ -445,7 +445,66 @@
   // If iterator is a string, sort objects by that property with the name
   // of that string. For example, _.sortBy(people, 'name') should sort
   // an array of people by their name.
-  _.sortBy = function (collection, iterator) {};
+
+  _.sortBy = function (collection, iterator) {
+    if (typeof iterator === "string") {
+      collection.sort(function (a, b) {
+        return a[iterator] - b[iterator];
+      });
+    } else {
+      collection.sort(function (a, b) {
+        return iterator(a) - iterator(b);
+      });
+    }
+    return collection;
+  };
+
+  // _.sortBy = function (collection, iterator) {
+  //   let array = collection;
+  //   let result = [];
+  //   let undef = [];
+  //   let i = -1;
+
+  //   while (array.length > 5) {
+  //     i++;
+  //     let nums = [];
+  //     let a = iterator(array[i]);
+  //     if (a === undefined) {
+  //       undef.push(undefined);
+  //       array.splice(i, 1);
+  //       continue;
+  //     }
+  //     console.log(undef);
+  //     for (let j = 0; j < array.length; j++) {
+  //       let b = iterator(array[j]);
+  //       let compareNums = a - b;
+
+  //       if (b === undefined) {
+
+  //       } else {
+  //          nums.push(compareNums);
+  //       }
+  //     }
+  //     let minNumsIndex = _.indexOf(nums, Math.max(...nums));
+  //     console.log(minNumsIndex);
+  //     result.push(array[minNumsIndex]);
+  //     array.splice(minNumsIndex, 1);
+  //     console.log(array);
+  //   }
+
+  //   if (array.length === 2) {
+  //     if (iterator(array[0]) <= iterator(array[1])) {
+  //       result.push(array[0]);
+  //       result.push(array[1]);
+  //     } else {
+  //       result.push(array[1]);
+  //       result.push(array[0]);
+  //     }
+  //   }
+  //   console.log(result);
+
+  //   return result;
+  // };
 
   // Zip together two or more arrays with elements of the same index
   // going together.

@@ -511,11 +511,47 @@
   //
   // Example:
   // _.zip(['a','b','c','d'], [1,2,3]) returns [['a',1], ['b',2], ['c',3], ['d',undefined]]
-  _.zip = function () {};
+  _.zip = function (...args) {
+    let arrs = args;
+    let arrLength = [];
+    let result = [];
+
+    for (let i = 0; i < arrs.length; i++) {
+      let element = [];
+      arrLength.push(arrs[i].length);
+      for (let j = 0; j < Math.max(...arrLength); j++) {
+        element.push(arrs[j][i]);
+      }
+      result.push(element);
+    }
+    return result;
+  };
 
   // Takes an arbitrary number of arrays and produces an array that contains
   // every item shared between all the passed-in arrays.
-  _.intersection = function () {};
+  _.intersection = function (...args) {
+    let arrs = args;
+    let length = [];
+    let index;
+    let result = [];
+
+    for (let i = 0; i < arrs.length; i++) {
+      length.push(arrs[i].length);
+    }
+
+    index = _.indexOf(length, Math.max(...length));
+
+    for (let i = 0; i < arrs[index].length; i++) {
+      let every = [];
+      for (let j = 0; j < arrs.length; j++) {
+        every.push(_.contains(arrs[j], arrs[index][i]));
+      }
+      if (_.every(every)) {
+        result.push(arrs[index][i]);
+      }
+    }
+    return result;
+  };
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.

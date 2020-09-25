@@ -555,7 +555,22 @@
 
   // Take the difference between one array and a number of other arrays.
   // Only the elements present in just the first array will remain.
-  _.difference = function (array) {};
+  _.difference = function (array, ...args) {
+    let firstArr = array;
+    let arrs = args;
+    let result = [];
+
+    for (let i = 0; i < firstArr.length; i++) {
+      let some = [];
+      for (let j = 0; j < arrs.length; j++) {
+        some.push(_.contains(arrs[j], firstArr[i]));
+      }
+      if (!_.some(some)) {
+        result.push(firstArr[i]);
+      }
+    }
+    return result;
+  };
 
   // Memorize an expensive function's results by storing them. You may assume
   // that the function only takes primitives as arguments.
@@ -565,12 +580,34 @@
   // _.memoize should return a function that, when called, will check if it has
   // already computed the result for the given argument and return that value
   // instead if possible.
-  _.memoize = function (func) {};
+  _.memoize = function (func) {
+    var container = {};
+
+    return function test() {
+      if (container[JSON.stringify(arguments)] === undefined) {
+        container[JSON.stringify(arguments)] = func.apply(null, arguments);
+        return container[JSON.stringify(arguments)];
+      } else {
+        return container[JSON.stringify(arguments)];
+      }
+    };
+  };
 
   // Returns a function, that, when invoked, will only be triggered at most once
   // during a given window of time.  See the Underbar readme for extra details
   // on this function.
   //
   // Note: This is difficult! It may take a while to implement.
-  _.throttle = function (func, wait) {};
+  _.throttle = function (func, wait) {
+    let flag = false;
+    return function () {
+      if (!flag) {
+        func();
+        flag = true;
+        setTimeout(function () {
+          flag = false;
+        }, wait);
+      }
+    };
+  };
 })();
